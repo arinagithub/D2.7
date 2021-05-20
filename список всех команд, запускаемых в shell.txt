@@ -1,0 +1,117 @@
+C:\Users\Admin\PycharmProjects\pythonProject1\project>python manage.py shell
+Python 3.8.8 (tags/v3.8.8:024d805, Feb 19 2021, 13:18:16) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from newapp.models import *
+>>> user1 = User.objects.create_user(username='User1')
+>>> user2 = User.objects.create_user(username='User2')
+>>> user1
+<User: User1>
+>>> author1 = Author.objects.create(authorUser=user1)
+>>> author2 = Author.objects.create(authorUser=user2)
+>>> author2
+<Author: Author object (2)>
+>>> category1 = Category.objects.create(name='IT')
+>>> category2 = Category.objects.create(name='Business')
+>>> category3 = Category.objects.create(name='Medical')
+>>> category4 = Category.objects.create(name='Sozial')
+>>> Category.objects.get(id=3)
+<Category: Category object (3)>
+>>> Author.objects.get(id=1)
+<Author: Author object (1)>
+>>> article1 = Post.objects.create(author=author1, categoryType='AR', title='Заголовок статьи 1', text='Текст статьи 1')
+>>> Post.objects.get(id=1).title
+'Заголовок статьи 1'
+>>> article2 = Post.objects.create(author=author1, categoryType='AR', title='Заголовок статьи 2', text='Текст статьи 2')
+>>> Post.objects.get(id=2).text
+'Текст статьи 2'
+>>> Author.objects.get(id=2)
+<Author: Author object (2)>
+>>> news1 = Post.objects.create(author=author2, categoryType='NW', title='Заголовок новости 1', text='Текст новости 1')
+>>> Post.objects.get(id=3).title
+'Заголовок новости 1'
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1))
+>>> Post.objects.get(id=1).postCategory.add(Category.objects.get(id=2))
+>>> Post.objects.get(id=2).postCategory.add(Category.objects.get(id=3))
+>>> Post.objects.get(id=3).postCategory.add(Category.objects.get(id=4))
+>>> comment1 = Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=Author.objects.get(id=1).authorUser, text='Текст комментария 1')
+>>> comment2 = Comment.objects.create(commentPost=Post.objects.get(id=1), commentUser=user1, text='Текст комментария 2')
+>>> comment3 = Comment.objects.create(commentPost=Post.objects.get(id=2), commentUser=user2, text='Текст комментария 3')
+>>> comment4 = Comment.objects.create(commentPost=Post.objects.get(id=3), commentUser=Author.objects.get(id=2).authorUser, text='Текст комментария 4')
+>>> Comment.objects.get(id=1).text
+'Текст комментария 1'
+>>> Comment.objects.get(id=3).text
+'Текст комментария 3'
+>>> Comment.objects.get(id=4).commentUser
+<User: User2>
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).dislike()
+>>> Comment.objects.get(id=4).dislike()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).rating
+5
+>>> Comment.objects.get(id=1).rating
+6
+>>> Comment.objects.get(id=2).rating
+0
+>>> Comment.objects.get(id=3).rating
+0
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=1).dislike()
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=1).dislike()
+>>> Post.objects.get(id=1).dislike()
+>>> Post.objects.get(id=1).rating
+6
+>>> Post.objects.get(id=3).dislike()
+>>> Post.objects.get(id=3).dislike()
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).rating
+5
+>>> Post.objects.get(id=2).rating
+0
+>>> Author.objects.get(id=1)
+<Author: Author object (1)>
+>>> author = Author.objects.get(id=1)
+>>> Post.objects.get(id=1).like()
+>>> author.update_rating()
+>>> author.ratingAuthor
+24
+>>> Author.objects.get(id=2)
+<Author: Author object (2)>
+>>> author = Author.objects.get(id=2)
+>>> Post.objects.get(id=3).like()
+>>> author.update_rating()
+>>> author.ratingAuthor
+20
+>>> author = Author.objects.order_by('-ratingAuthor')[:1]
+>>> author
+<QuerySet [<Author: Author object (1)>]>
+>>> author = Author.objects.order_by('-ratingAuthor')[:1]
+>>> author.ratingAuthor
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'QuerySet' object has no attribute 'ratingAuthor'
+>>> for i in author:
+...     i.ratingAuthor
+...     i.authorUser.username
+...
+24
+'User1'
+>>> Post.objects.all().order_by('-rating').values('dateCreation', 'author', 'rating', 'title', 'text')[0]
+{'dateCreation': datetime.datetime(2021, 5, 20, 12, 38, 8, 230257, tzinfo=<UTC>), 'author': 1, 'rating': 6, 'title': 'Заголовок статьи 1', 'text': 'Текст статьи 1'}
+>>> Comment.objects.all().order_by('-rating').values('dateCreation', 'commentUser', 'rating', 'text')[0]
+{'dateCreation': datetime.datetime(2021, 5, 20, 12, 41, 25, 444288, tzinfo=<UTC>), 'commentUser': 1, 'rating': 6, 'text': 'Текст комментария 1'}
+
+
+
+
+
+
+
+
